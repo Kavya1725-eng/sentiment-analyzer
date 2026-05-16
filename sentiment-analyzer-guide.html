@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sentiment Analyzer – Complete Project Guide</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: system-ui, sans-serif; background: #f8f9fa; color: #1a1a1a; line-height: 1.7; }
+  .container { max-width: 860px; margin: 0 auto; padding: 2rem 1.5rem 4rem; }
+  h1 { font-size: 26px; font-weight: 600; margin-bottom: 6px; }
+  h2 { font-size: 18px; font-weight: 600; margin: 2.5rem 0 1rem; color: #1a1a1a; }
+  h3 { font-size: 15px; font-weight: 600; margin: 1.2rem 0 6px; color: #333; }
+  p { font-size: 14px; color: #444; margin-bottom: 8px; }
+  .subtitle { font-size: 14px; color: #666; margin-bottom: 2rem; }
+
+  .steps-row { display: flex; gap: 10px; margin: 1rem 0 2rem; flex-wrap: wrap; }
+  .step-pill { background: #fff; border: 1px solid #e0e0e0; border-radius: 99px; padding: 6px 16px; font-size: 13px; color: #333; font-weight: 500; cursor: pointer; transition: all .15s; }
+  .step-pill.active { background: #1a1a2e; color: #fff; border-color: #1a1a2e; }
+  .step-pill:hover:not(.active) { background: #f0f0f0; }
+
+  .section { display: none; }
+  .section.visible { display: block; }
+
+  .file-tree { background: #1e1e2e; border-radius: 10px; padding: 1.2rem 1.4rem; font-family: monospace; font-size: 13px; color: #cdd6f4; line-height: 1.9; margin: 1rem 0; }
+  .file-tree .folder { color: #89b4fa; }
+  .file-tree .file { color: #a6e3a1; }
+  .file-tree .comment { color: #6c7086; }
+
+  .code-block { position: relative; background: #1e1e2e; border-radius: 10px; padding: 1.2rem 1.4rem; font-family: monospace; font-size: 13px; color: #cdd6f4; line-height: 1.8; margin: 1rem 0; overflow-x: auto; }
+  .copy-btn { position: absolute; top: 10px; right: 10px; background: #313244; border: none; color: #cdd6f4; border-radius: 6px; padding: 4px 10px; font-size: 12px; cursor: pointer; }
+  .copy-btn:hover { background: #45475a; }
+  .copy-btn.copied { background: #a6e3a1; color: #1e1e2e; }
+
+  .kw { color: #cba6f7; }
+  .fn { color: #89b4fa; }
+  .str { color: #a6e3a1; }
+  .cm { color: #6c7086; font-style: italic; }
+  .num { color: #fab387; }
+  .imp { color: #f38ba8; }
+
+  .tip-card { background: #fff; border: 1px solid #e0e0e0; border-left: 3px solid #89b4fa; border-radius: 8px; padding: 12px 16px; margin: 1rem 0; font-size: 13px; color: #333; }
+  .tip-card.green { border-left-color: #a6e3a1; }
+  .tip-card.amber { border-left-color: #f9e2af; }
+  .tip-label { font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .05em; margin-bottom: 4px; color: #666; }
+
+  .readme-box { background: #fff; border: 1px solid #e0e0e0; border-radius: 10px; padding: 1.5rem; font-family: monospace; font-size: 12.5px; line-height: 1.8; color: #333; margin: 1rem 0; white-space: pre-wrap; }
+
+  .tag { display: inline-block; background: #eef2ff; color: #3730a3; border-radius: 99px; padding: 2px 10px; font-size: 11px; font-weight: 500; margin: 2px; }
+  .tag.green { background: #f0fdf4; color: #166534; }
+  .tag.orange { background: #fff7ed; color: #9a3412; }
+
+  .check-list { list-style: none; padding: 0; margin: .5rem 0 1.5rem; }
+  .check-list li { font-size: 13px; color: #444; padding: 5px 0 5px 28px; position: relative; border-bottom: 1px solid #f3f3f3; }
+  .check-list li::before { content: "✓"; position: absolute; left: 4px; color: #22c55e; font-weight: 700; }
+
+  .linkedin-box { background: #f0f7ff; border: 1px solid #bfdbfe; border-radius: 10px; padding: 1.2rem 1.4rem; font-size: 13.5px; line-height: 1.8; color: #1e3a5f; white-space: pre-wrap; margin: 1rem 0; }
+
+  .badge-row { display: flex; gap: 6px; flex-wrap: wrap; margin: .5rem 0 1rem; }
+  .badge-img { background: #e5e7eb; border-radius: 4px; padding: 3px 8px; font-size: 11px; font-weight: 500; color: #374151; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 13px; margin: 1rem 0; }
+  th { background: #f3f4f6; padding: 8px 12px; text-align: left; font-weight: 600; font-size: 12px; color: #555; border: 1px solid #e5e7eb; }
+  td { padding: 8px 12px; border: 1px solid #e5e7eb; color: #333; }
+  tr:nth-child(even) td { background: #fafafa; }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <h1>Sentiment Analyzer — Complete Project Guide</h1>
+  <p class="subtitle">Python · TextBlob · Flask · Step-by-step from zero to GitHub-ready</p>
+
+  <div class="steps-row">
+    <div class="step-pill active" onclick="show('setup')">1. Project Setup</div>
+    <div class="step-pill" onclick="show('core')">2. Core Python Code</div>
+    <div class="step-pill" onclick="show('web')">3. Web UI (Flask)</div>
+    <div class="step-pill" onclick="show('readme')">4. README</div>
+    <div class="step-pill" onclick="show('github')">5. GitHub</div>
+    <div class="step-pill" onclick="show('linkedin')">6. LinkedIn Post</div>
+  </div>
+
+  <!-- STEP 1: SETUP -->
+  <div class="section visible" id="setup">
+    <h2>Step 1 — Project structure & setup</h2>
+    <p>Create this exact folder structure. It looks professional on GitHub and shows you know how to organise code.</p>
+
+    <div class="file-tree">
+<span class="folder">sentiment-analyzer/</span>
+├── <span class="file">app.py</span>              <span class="comment"># Flask web server</span>
+├── <span class="file">analyzer.py</span>         <span class="comment"># Core sentiment logic</span>
+├── <span class="file">requirements.txt</span>    <span class="comment"># Python dependencies</span>
+├── <span class="file">README.md</span>           <span class="comment"># Your project description</span>
+├── <span class="folder">templates/</span>
+│   └── <span class="file">index.html</span>      <span class="comment"># Web UI</span>
+└── <span class="folder">static/</span>
+    └── <span class="file">style.css</span>       <span class="comment"># Styling</span>
+    </div>
+
+    <h3>Commands to run in terminal</h3>
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<span class="cm"># 1. Create the project folder</span>
+mkdir sentiment-analyzer
+cd sentiment-analyzer
+
+<span class="cm"># 2. Create a virtual environment (good practice)</span>
+python -m venv venv
+
+<span class="cm"># 3. Activate it</span>
+<span class="cm"># On Windows:</span>
+venv\Scripts\activate
+<span class="cm"># On Mac/Linux:</span>
+source venv/bin/activate
+
+<span class="cm"># 4. Install libraries</span>
+pip install textblob flask
+
+<span class="cm"># 5. Download TextBlob's language data</span>
+python -m textblob.download_corpora
+
+<span class="cm"># 6. Create requirements.txt</span>
+pip freeze > requirements.txt</div>
+
+    <div class="tip-card">
+      <div class="tip-label">Why virtual environment?</div>
+      It keeps your project's libraries separate from your system Python. Every professional Python project uses one. It shows maturity on GitHub.
+    </div>
+  </div>
+
+  <!-- STEP 2: CORE CODE -->
+  <div class="section" id="core">
+    <h2>Step 2 — Core Python logic (analyzer.py)</h2>
+    <p>This is the brain of your project. Create a file called <code>analyzer.py</code> and paste this exact code.</p>
+
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<span class="kw">from</span> textblob <span class="kw">import</span> TextBlob
+
+
+<span class="kw">def</span> <span class="fn">analyze_sentiment</span>(text: <span class="fn">str</span>) -> <span class="fn">dict</span>:
+    <span class="str">"""
+    Analyze the sentiment of a given text.
+
+    Returns a dictionary with:
+    - label: 'Positive', 'Negative', or 'Neutral'
+    - polarity: float from -1.0 (most negative) to 1.0 (most positive)
+    - subjectivity: float from 0.0 (objective) to 1.0 (subjective)
+    - emoji: visual indicator
+    """</span>
+    <span class="kw">if not</span> text <span class="kw">or not</span> text.strip():
+        <span class="kw">raise</span> <span class="fn">ValueError</span>(<span class="str">"Input text cannot be empty."</span>)
+
+    blob = TextBlob(text)
+    polarity = blob.sentiment.polarity
+    subjectivity = blob.sentiment.subjectivity
+
+    <span class="kw">if</span> polarity > <span class="num">0.1</span>:
+        label = <span class="str">"Positive"</span>
+        emoji = <span class="str">"😊"</span>
+    <span class="kw">elif</span> polarity < -<span class="num">0.1</span>:
+        label = <span class="str">"Negative"</span>
+        emoji = <span class="str">"😞"</span>
+    <span class="kw">else</span>:
+        label = <span class="str">"Neutral"</span>
+        emoji = <span class="str">"😐"</span>
+
+    <span class="kw">return</span> {
+        <span class="str">"label"</span>: label,
+        <span class="str">"polarity"</span>: <span class="fn">round</span>(polarity, <span class="num">3</span>),
+        <span class="str">"subjectivity"</span>: <span class="fn">round</span>(subjectivity, <span class="num">3</span>),
+        <span class="str">"emoji"</span>: emoji,
+        <span class="str">"text"</span>: text,
+    }
+
+
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:
+    <span class="cm"># Quick CLI test — run: python analyzer.py</span>
+    test_sentences = [
+        <span class="str">"I absolutely love this product! It's amazing."</span>,
+        <span class="str">"This is the worst experience I have ever had."</span>,
+        <span class="str">"The package arrived on Tuesday."</span>,
+    ]
+    <span class="kw">for</span> sentence <span class="kw">in</span> test_sentences:
+        result = <span class="fn">analyze_sentiment</span>(sentence)
+        <span class="fn">print</span>(<span class="str">f"{result['emoji']} {result['label']:9} | Polarity: {result['polarity']:+.3f} | {sentence[:50]}"</span>)</div>
+
+    <div class="tip-card green">
+      <div class="tip-label">Test it now</div>
+      Run <code>python analyzer.py</code> in your terminal. You should see three lines with emoji labels. If it works, your core logic is ready.
+    </div>
+
+    <h3>What the numbers mean</h3>
+    <table>
+      <tr><th>Value</th><th>Range</th><th>Meaning</th></tr>
+      <tr><td>Polarity</td><td>-1.0 to +1.0</td><td>Negative → Neutral → Positive sentiment</td></tr>
+      <tr><td>Subjectivity</td><td>0.0 to 1.0</td><td>0 = factual/objective, 1 = very opinionated</td></tr>
+    </table>
+  </div>
+
+  <!-- STEP 3: WEB UI -->
+  <div class="section" id="web">
+    <h2>Step 3 — Flask web UI (app.py + templates)</h2>
+    <p>This turns your Python script into a website. Create <code>app.py</code>:</p>
+
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+<span class="kw">from</span> flask <span class="kw">import</span> Flask, render_template, request, jsonify
+<span class="kw">from</span> analyzer <span class="kw">import</span> analyze_sentiment
+
+app = <span class="fn">Flask</span>(__name__)
+
+
+<span class="fn">@app.route</span>(<span class="str">"/"</span>)
+<span class="kw">def</span> <span class="fn">index</span>():
+    <span class="kw">return</span> <span class="fn">render_template</span>(<span class="str">"index.html"</span>)
+
+
+<span class="fn">@app.route</span>(<span class="str">"/analyze"</span>, methods=[<span class="str">"POST"</span>])
+<span class="kw">def</span> <span class="fn">analyze</span>():
+    data = request.get_json()
+    text = data.get(<span class="str">"text"</span>, <span class="str">""</span>)
+    <span class="kw">try</span>:
+        result = <span class="fn">analyze_sentiment</span>(text)
+        <span class="kw">return</span> <span class="fn">jsonify</span>(result)
+    <span class="kw">except</span> ValueError <span class="kw">as</span> e:
+        <span class="kw">return</span> <span class="fn">jsonify</span>({<span class="str">"error"</span>: <span class="fn">str</span>(e)}), <span class="num">400</span>
+
+
+<span class="kw">if</span> __name__ == <span class="str">"__main__"</span>:
+    app.run(debug=<span class="kw">True</span>)</div>
+
+    <p style="margin-top:1.2rem">Now create <code>templates/index.html</code>:</p>
+
+    <div class="code-block">
+      <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;
+  &lt;title&gt;Sentiment Analyzer&lt;/title&gt;
+  &lt;style&gt;
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, sans-serif; background: #f0f4ff;
+           display: flex; align-items: center; justify-content: center;
+           min-height: 100vh; padding: 1rem; }
+    .card { background: white; border-radius: 16px; padding: 2rem;
+            width: 100%; max-width: 520px; box-shadow: 0 4px 24px rgba(0,0,0,.08); }
+    h1 { font-size: 22px; margin-bottom: 6px; }
+    p.sub { font-size: 13px; color: #888; margin-bottom: 1.5rem; }
+    textarea { width: 100%; border: 1.5px solid #e0e0e0; border-radius: 10px;
+               padding: 12px; font-size: 14px; resize: vertical; min-height: 110px;
+               font-family: inherit; outline: none; transition: border .2s; }
+    textarea:focus { border-color: #6366f1; }
+    button { margin-top: 10px; width: 100%; background: #6366f1; color: white;
+             border: none; border-radius: 10px; padding: 12px;
+             font-size: 15px; font-weight: 600; cursor: pointer; transition: .2s; }
+    button:hover { background: #4f46e5; }
+    button:disabled { background: #c7c7c7; cursor: not-allowed; }
+    #result { margin-top: 1.5rem; display: none; }
+    .result-badge { font-size: 42px; text-align: center; margin-bottom: 8px; }
+    .result-label { text-align: center; font-size: 22px; font-weight: 700; margin-bottom: 1rem; }
+    .result-label.Positive { color: #22c55e; }
+    .result-label.Negative { color: #ef4444; }
+    .result-label.Neutral  { color: #f59e0b; }
+    .metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .metric { background: #f8f9fa; border-radius: 10px; padding: 12px; text-align: center; }
+    .metric-val { font-size: 22px; font-weight: 700; }
+    .metric-lbl { font-size: 12px; color: #888; margin-top: 2px; }
+    .bar-wrap { margin-top: 1rem; }
+    .bar-label { display: flex; justify-content: space-between;
+                 font-size: 12px; color: #888; margin-bottom: 4px; }
+    .bar-track { background: #e5e7eb; border-radius: 99px; height: 8px; }
+    .bar-fill { height: 8px; border-radius: 99px; transition: width .5s ease; }
+    .error-msg { color: #ef4444; font-size: 13px; margin-top: 10px; }
+  &lt;/style&gt;
+&lt;/head&gt;
+&lt;body&gt;
+  &lt;div class="card"&gt;
+    &lt;h1&gt;Sentiment Analyzer&lt;/h1&gt;
+    &lt;p class="sub"&gt;Powered by Python &amp; TextBlob — detects Positive, Negative, or Neutral tone&lt;/p&gt;
+    &lt;textarea id="inputText" placeholder="Type or paste any text here..."&gt;&lt;/textarea&gt;
+    &lt;button id="analyzeBtn" onclick="analyze()"&gt;Analyze Sentiment&lt;/button&gt;
+    &lt;p id="errorMsg" class="error-msg"&gt;&lt;/p&gt;
+
+    &lt;div id="result"&gt;
+      &lt;div class="result-badge" id="emoji"&gt;&lt;/div&gt;
+      &lt;div class="result-label" id="label"&gt;&lt;/div&gt;
+      &lt;div class="metrics"&gt;
+        &lt;div class="metric"&gt;
+          &lt;div class="metric-val" id="polarity"&gt;&lt;/div&gt;
+          &lt;div class="metric-lbl"&gt;Polarity (-1 to +1)&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="metric"&gt;
+          &lt;div class="metric-val" id="subjectivity"&gt;&lt;/div&gt;
+          &lt;div class="metric-lbl"&gt;Subjectivity (0 to 1)&lt;/div&gt;
+        &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;div class="bar-wrap"&gt;
+        &lt;div class="bar-label"&gt;&lt;span&gt;Sentiment strength&lt;/span&gt;&lt;span id="barPct"&gt;&lt;/span&gt;&lt;/div&gt;
+        &lt;div class="bar-track"&gt;&lt;div class="bar-fill" id="barFill"&gt;&lt;/div&gt;&lt;/div&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/div&gt;
+
+  &lt;script&gt;
+    async function analyze() {
+      const text = document.getElementById("inputText").value;
+      const btn = document.getElementById("analyzeBtn");
+      const err = document.getElementById("errorMsg");
+      err.textContent = "";
+      btn.disabled = true;
+      btn.textContent = "Analyzing...";
+
+      const res = await fetch("/analyze", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ text })
+      });
+      const data = await res.json();
+      btn.disabled = false;
+      btn.textContent = "Analyze Sentiment";
+
+      if (data.error) { err.textContent = data.error; return; }
+
+      document.getElementById("result").style.display = "block";
+      document.getElementById("emoji").textContent = data.emoji;
+      const lbl = document.getElementById("label");
+      lbl.textContent = data.label;
+      lbl.className = "result-label " + data.label;
+      document.getElementById("polarity").textContent = (data.polarity > 0 ? "+" : "") + data.polarity;
+      document.getElementById("subjectivity").textContent = data.subjectivity;
+
+      const pct = Math.round(Math.abs(data.polarity) * 100);
+      document.getElementById("barPct").textContent = pct + "%";
+      const fill = document.getElementById("barFill");
+      const color = data.label === "Positive" ? "#22c55e" : data.label === "Negative" ? "#ef4444" : "#f59e0b";
+      fill.style.background = color;
+      fill.style.width = pct + "%";
+    }
+  &lt;/script&gt;
+&lt;/body&gt;
+&lt;/html&gt;

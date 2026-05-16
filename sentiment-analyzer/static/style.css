@@ -1,0 +1,208 @@
+:root {
+    --primary-color: #6366f1;
+    --primary-hover: #4f46e5;
+    --success-color: #22c55e;
+    --danger-color: #ef4444;
+    --warning-color: #f59e0b;
+    --text-main: #1e293b;
+    --text-muted: #64748b;
+
+    /* Dynamic Background Variables */
+    --bg-color-1: rgba(99, 102, 241, 0.4);
+    --bg-color-2: rgba(236, 72, 153, 0.3);
+    --bg-color-3: rgba(16, 185, 129, 0.2);
+}
+
+body {
+    font-family: 'Outfit', sans-serif;
+    background-color: #f8fafc;
+    color: var(--text-main);
+    position: relative;
+    overflow-x: hidden;
+    min-height: 100vh;
+}
+
+/* --- Premium Background Animation --- */
+.bg-shape {
+    position: fixed;
+    border-radius: 50%;
+    filter: blur(80px);
+    z-index: -1;
+    animation: float 15s infinite ease-in-out alternate;
+    transition: background-color 1.5s ease-in-out;
+}
+
+.bg-shape-1 {
+    width: 400px;
+    height: 400px;
+    background-color: var(--bg-color-1);
+    top: -100px;
+    left: -100px;
+}
+
+.bg-shape-2 {
+    width: 500px;
+    height: 500px;
+    background-color: var(--bg-color-2);
+    bottom: -150px;
+    right: -100px;
+    animation-delay: -5s;
+}
+
+.bg-shape-3 {
+    width: 300px;
+    height: 300px;
+    background-color: var(--bg-color-3);
+    top: 40%;
+    left: 40%;
+    animation-delay: -10s;
+}
+
+@keyframes float {
+    0% { transform: translate(0, 0) scale(1); }
+    50% { transform: translate(30px, 50px) scale(1.1); }
+    100% { transform: translate(-30px, -20px) scale(0.9); }
+}
+
+/* --- Glassmorphism Card --- */
+.glass-card {
+    background: rgba(255, 255, 255, 0.75);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(255, 255, 255, 0.5);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.1);
+    border-radius: 20px;
+    padding: 2.5rem;
+    width: 100%;
+    max-width: 600px;
+    transition: transform 0.3s ease;
+}
+
+/* Typography & Inputs */
+h1 {
+    font-weight: 700;
+    color: var(--text-main);
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: var(--text-muted);
+    font-weight: 300;
+    margin-bottom: 2rem;
+}
+
+.form-control {
+    border-radius: 12px;
+    padding: 1rem;
+    border: 2px solid rgba(226, 232, 240, 0.8);
+    background: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+    box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.02);
+}
+
+.form-control:focus {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+    background: #fff;
+}
+
+/* Button */
+.btn-analyze {
+    background: var(--primary-color);
+    color: white;
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 12px;
+    border: none;
+    transition: all 0.3s ease;
+}
+
+.btn-analyze:hover {
+    background: var(--primary-hover);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 15px -3px rgba(99, 102, 241, 0.3);
+    color: white;
+}
+
+.btn-analyze:disabled {
+    background: #cbd5e1;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Results Section */
+#result {
+    display: none;
+    animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.result-badge {
+    font-size: 3.5rem;
+    line-height: 1;
+}
+
+.result-label {
+    font-size: 1.75rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+.Positive { color: var(--success-color); }
+.Negative { color: var(--danger-color); }
+.Neutral { color: var(--warning-color); }
+
+.metric-card {
+    background: rgba(248, 250, 252, 0.8);
+    border: 1px solid rgba(226, 232, 240, 0.8);
+    border-radius: 16px;
+    padding: 1rem;
+    transition: transform 0.2s ease;
+}
+
+.metric-card:hover {
+    transform: translateY(-2px);
+}
+
+.metric-val {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--text-main);
+}
+
+.metric-lbl {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* Progress Bar */
+.progress {
+    height: 10px;
+    border-radius: 999px;
+    background-color: #e2e8f0;
+    overflow: hidden;
+}
+
+.progress-bar {
+    border-radius: 999px;
+    transition: width 1s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 576px) {
+    .glass-card {
+        padding: 1.5rem;
+        border-radius: 16px;
+    }
+    
+    h1 {
+        font-size: 1.75rem;
+    }
+}
